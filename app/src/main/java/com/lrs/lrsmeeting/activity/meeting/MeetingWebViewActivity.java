@@ -99,7 +99,7 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
 //        tutorialView.setWebViewClient(new webCli());
         //初始化
         cordovaWebView.init(new CordovaInterfaceImpl(this), parser.getPluginEntries(), parser.getPreferences());
-        String webUrl = "file:///android_asset/www/index.html#/service?code=" + meetingId + "&SID=" + SID + "&domainHost=" + host + "&relayHost=" + relayHost;
+        String webUrl = "file:///android_asset/www/index.html#/service?code=" + meetingId + "&SID=" + SID + "&host=" + host + "&relayHost=" + relayHost;
         tutorialView.loadUrl(webUrl);
 
         receiver = new BroadcastReceiver() {

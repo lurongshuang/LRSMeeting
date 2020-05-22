@@ -6,16 +6,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.net.DnsResolver;
 import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.lrs.hyrc_base.utils.httputils.CallBackUtil;
 import com.lrs.hyrc_base.utils.httputils.HyrcHttpUtil;
 import com.lrs.hyrc_base.utils.sharedpreferences.SharedPreferencesHelper;
