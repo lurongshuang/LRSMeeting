@@ -1,0 +1,75 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    api  fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    //网络请求
+    api 'com.squareup.retrofit2:retrofit:2.8.1'
+    api 'com.squareup.retrofit2:converter-gson:2.6.2'
+
+    // okhttp 3
+    api 'com.squareup.okhttp3:okhttp:4.5.0'
+    debugImplementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
+    api 'com.google.code.gson:gson:2.8.6'
+
+    //刷新组件
+    api 'com.scwang.smart:refresh-layout-kernel:2.0.0-alpha-1'      //核心必须依赖
+    api 'com.scwang.smart:refresh-header-material:2.0.0-alpha-1'    //谷歌刷新头
+    api 'com.scwang.smart:refresh-footer-classics:2.0.0-alpha-1'    //经典加载
+    api 'com.github.uin3566:AllAngleExpandableButton:v1.2.0'
+
+    //加载动画
+    api 'com.wang.avi:library:2.1.3'
+    //沉浸式状态栏
+    api 'com.gyf.immersionbar:immersionbar:2.3.3-beta09'
+    //应用UI核心
+    api 'com.github.xuexiangjys:XUI:1.1.3'
+    api 'com.google.android.material:material:1.2.0-alpha06'
+
+    //baseRecyclerViewAdapterHelper
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+    //eventbus
+    api 'org.greenrobot:eventbus:3.1.1'
+    //view
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+
+    //图片加载
+    api 'com.github.bumptech.glide:glide:4.10.0'
+
+    api "io.reactivex.rxjava2:rxjava:2.2.8"
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    //自定义tabLayout
+    api 'com.github.hackware1993:MagicIndicator:1.5.0'
+
+
+}

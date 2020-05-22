@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: :meeting:@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5374b5db7a5096e3f4571ed12cadef3a/jetified-meeting/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5374b5db7a5096e3f4571ed12cadef3a/jetified-meeting/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5374b5db7a5096e3f4571ed12cadef3a/jetified-meeting/jars/libs/cordova-6.4.0.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5374b5db7a5096e3f4571ed12cadef3a/jetified-meeting/jars/libs/lib527webrtc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

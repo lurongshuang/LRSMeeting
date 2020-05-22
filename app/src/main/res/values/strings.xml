@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">宏宇睿晨会议</string>
+
+    <string name="perTitle">获取权限失败</string>
+    <string name="perText">点击允许才可以使用应用功能</string>
+
+    <!--font-->
+    <string name="iconfanhui">&#xe614;</string>
+    <string name="iconicon_search">&#xeb9c;</string>
+    <string name="iconjinru">&#xe608;</string>
+    <string name="iconshouqijiantou">&#xe66f;</string>
+    <string name="iconguanbi">&#xe611;</string>
+    <string name="icontianjia">&#xe66a;</string>
+    <string name="iconxuanzhuanshexiangtou">&#xe68f;</string>
+    <!--font-->
+    <!--tab-->
+    <string name="tab1">会议</string>
+    <string name="tab2">我的</string>
+</resources>

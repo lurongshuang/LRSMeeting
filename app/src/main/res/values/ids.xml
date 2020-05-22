@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="selectState" type="id" />
+    <item name="selectId" type="id" />
+    <item name="selectPosition" type="id" />
+</resources>

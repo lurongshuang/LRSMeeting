@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvStateTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/logo_bg"
+        android:padding="@dimen/dp_10"
+        android:text="未开始的会议"
+        android:textColor="@color/result_view"
+        android:textSize="@dimen/sp_11"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/llItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_onclick"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvMeetingName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="卢融霜的视频会议"
+                android:textColor="@color/textColorBlack"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:id="@+id/tvMeetingPer"
+                android:layout_width="@dimen/dp_200"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:ellipsize="end"
+                android:lines="2"
+                android:singleLine="true"
+                android:text="李艳苹,李艳苹，李艳苹,李艳苹,李艳苹,李艳苹，李艳苹,李艳苹"
+                android:textColor="@color/edu_text_more_color"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvMeetingDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical|right"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="3月26日"
+                android:textColor="@color/edu_text_more_color"
+                android:textSize="@dimen/sp_12" />
+
+            <com.lrs.lrsmeeting.view.FontIconView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:gravity="center_vertical|right"
+                android:text="@string/iconjinru"
+                android:textColor="@color/edu_text_more_color"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,55 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* ic_launcher-web.png
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:19.1.0
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => activemeeting_sdk\src\main\AndroidManifest.xml
+* assets\ => activemeeting_sdk\src\main\assets
+* jni\ => activemeeting_sdk\src\main\jni\
+* libs\armeabi-v7a\libamProtocolJni_2.2.so => activemeeting_sdk\src\main\jniLibs\armeabi-v7a\libamProtocolJni_2.2.so
+* libs\armeabi\libamProtocolJni_2.2.so => activemeeting_sdk\src\main\jniLibs\armeabi\libamProtocolJni_2.2.so
+* libs\commons-net-3.0.1.jar => activemeeting_sdk\libs\commons-net-3.0.1.jar
+* libs\fastjson-1.1.33.android.jar => activemeeting_sdk\libs\fastjson-1.1.33.android.jar
+* libs\imm_phone_sdk.jar => activemeeting_sdk\libs\imm_phone_sdk.jar
+* libs\libammsdk.jar => activemeeting_sdk\libs\libammsdk.jar
+* res\ => activemeeting_sdk\src\main\res\
+* src\ => activemeeting_sdk\src\main\java
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--permission-->
+    <string name="perTitle">获取权限失败</string>
+    <string name="perText">点击允许才可以使用应用功能</string>
+    <!--permission-->
+
+    <!--font-->
+    <string name="iconfanhui">&#xe614;</string>
+    <string name="iconicon_search">&#xeb9c;</string>
+    <string name="iconjinru">&#xe608;</string>
+    <string name="iconshouqijiantou">&#xe66f;</string>
+    <string name="iconguanbi">&#xe611;</string>
+    <string name="iconxiaoxi">&#xe600;</string>
+    <string name="iconaddSelect">&#xe7b0;</string>
+    <string name="iconsamiSelect">&#xe7b1;</string>
+    <string name="iconkefu">&#xe637;</string>
+    <string name="icondizhi">&#xe640;</string>
+    <string name="icondingdan">&#xe65d;</string>
+    <string name="iconshezhi">&#xe68c;</string>
+    <string name="iconxinbaniconshangchuan">&#xe617;</string>
+    <string name="iconbaocun">&#xe82a;</string>
+    <!--font-->
+
+</resources>
