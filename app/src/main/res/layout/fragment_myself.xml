@@ -67,10 +67,12 @@
     </RelativeLayout>
 
 
-    <LinearLayout
+    <com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout
+        android:layout_marginTop="@dimen/dp_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:id="@+id/xuiLLkf"
         android:orientation="horizontal"
         android:padding="@dimen/dp_10">
 
@@ -100,12 +102,13 @@
             android:gravity="right|center_vertical"
             android:text="@string/iconjinru"
             android:textSize="@dimen/sp_18" />
-    </LinearLayout>
+    </com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout>
 
-    <LinearLayout
+    <com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout
+        android:id="@+id/xuiLLabout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_15"
         android:background="@color/white"
         android:orientation="horizontal"
         android:padding="@dimen/dp_10">
@@ -136,7 +139,7 @@
             android:gravity="right|center_vertical"
             android:text="@string/iconjinru"
             android:textSize="@dimen/sp_18" />
-    </LinearLayout>
+    </com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -146,8 +149,9 @@
         android:layout_marginRight="@dimen/dp_10"
         android:background="@color/listBgCol" />
 
-    <LinearLayout
+    <com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout
         android:layout_width="match_parent"
+        android:id="@+id/xuiSeting"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
@@ -179,14 +183,6 @@
             android:gravity="right|center_vertical"
             android:text="@string/iconjinru"
             android:textSize="@dimen/sp_18" />
-    </LinearLayout>
+    </com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout>
 
-    <Button
-        android:id="@+id/btOuLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorPrimary"
-        android:text="登出"
-        android:textColor="@color/textColorWhite"></Button>
 </LinearLayout>

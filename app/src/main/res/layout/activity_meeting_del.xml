@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.meeting.MeetingDelActivity">
+
+    <include layout="@layout/include_toolbar_layout_text" />
+
+    <com.xuexiang.xui.widget.statelayout.StatefulLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sfLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_42"
+        app:stf_animationEnabled="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/ryList"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_49" />
+    </com.xuexiang.xui.widget.statelayout.StatefulLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_48"
+        android:background="@color/listBgCol" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:background="@color/textColorWhite"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.xuexiang.xui.widget.button.ButtonView
+                android:id="@+id/btjoinMeeting"
+                style="@style/ButtonView.Blue"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:text="进入会议"
+                app:textSolidColor="@color/colorPrimary" />
+
+            <com.xuexiang.xui.widget.button.ButtonView
+                style="@style/ButtonView.Blue"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_30"
+                android:background="@color/color_red"
+                android:gravity="center"
+                android:text="取消会议"
+                android:visibility="gone"
+                app:textSelectedSolidColor="@color/color_red_select"
+                app:textSolidColor="@color/color_red" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
+

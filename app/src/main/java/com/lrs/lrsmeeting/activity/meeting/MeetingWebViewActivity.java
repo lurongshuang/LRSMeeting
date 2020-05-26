@@ -21,6 +21,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.lrs.hyrc_base.utils.sharedpreferences.SharedPreferencesHelper;
 import com.lrs.lrsmeeting.R;
+import com.lrs.lrsmeeting.activity.login.LoginActivity;
 import com.lrs.lrsmeeting.base.BaseActivity;
 import com.lrs.lrsmeeting.url.Config;
 
@@ -48,7 +49,7 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
     //	Session ID 用户登录后产生的身份标识码
     String SID;
     //	用户唯一标识，登录用户传
-    String uid;
+    int uid;
     //	角色role: 会议场模式：1是主持人 2普通参会人员； 培训模式：1是主持人 2是讲师，3普通参付人员
     int role;
     // 会议房间唯一标识码（可传code和rd两者必传一，code会议ID）
@@ -68,6 +69,7 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
 
     private long meetingId;
     private String userId;
+    private String userName;
 
     protected CordovaPlugin activityResultCallback = null;
     protected boolean activityResultKeepRunning;
@@ -77,6 +79,9 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
     private BroadcastReceiver receiver;
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
+    private boolean isLaunUser;
+
+    private boolean isMeeting = false;
 
     @Override
     protected int loadView() {
@@ -88,6 +93,12 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
     @Override
     protected void initData() {
         meetingId = getIntent().getExtras().getLong("meetingId");
+        uid = Integer.parseInt(SharedPreferencesHelper.getPrefString("userId", ""));
+        userName = getIntent().getExtras().getString("userName", null);
+        if (userName == null) {
+            userName = SharedPreferencesHelper.getPrefString("userName", "");
+        }
+        isLaunUser = getIntent().getExtras().getBoolean("isLaunUser", false);
         SID = SharedPreferencesHelper.getPrefString("SID", "2");
         userId = SharedPreferencesHelper.getPrefString("userId", "2");
 
@@ -99,7 +110,7 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
 //        tutorialView.setWebViewClient(new webCli());
         //初始化
         cordovaWebView.init(new CordovaInterfaceImpl(this), parser.getPluginEntries(), parser.getPreferences());
-        String webUrl = "file:///android_asset/www/index.html#/service?code=" + meetingId + "&SID=" + SID + "&host=" + host + "&relayHost=" + relayHost;
+        String webUrl = "file:///android_asset/www/index.html#/service?code=" + meetingId + "&SID=" + SID + "&host=" + host + "&relayHost=" + relayHost + "&name=" + userName + "&uid=" + uid + "&role=" + (isLaunUser ? 1 : 0);
         tutorialView.loadUrl(webUrl);
 
         receiver = new BroadcastReceiver() {
@@ -107,18 +118,63 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
             public void onReceive(Context context, Intent intent) {
                 try {
                     final JSONObject data = new JSONObject(intent.getExtras().getString("userdata"));
-                    Log.d("CDVBroadcaster", String.format("Native event [%s] received with data [%s]", intent.getAction(), String.valueOf(data)));
                     switch (data.getInt("recode")) {
-                        case 2002:
                         case 2001:
-                        case 2000:
-                        case 2005:
-                            if (receiver != null) {
-//                                unregisterReceiver(receiver);
-                                LocalBroadcastManager.getInstance(MeetingWebViewActivity.this).unregisterReceiver(receiver);
-                            }
+                            showToast("被主持人踢出房间");
                             MeetingWebViewActivity.this.finish();
                             break;
+                        case 2002:
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2003:
+                            showToast("当前会议还未开始");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2005:
+                            showToast("主持人已解散本次会议");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2007:
+                            showToast("当前会议链接已失效");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2008:
+                            showToast("参会方数已达上限，请联系管理员");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2010:
+                            showToast("当前流媒体服务器空间已满，请稍后再试");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2011:
+                            showToast("当前会议室人数已达上线");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2012:
+                            showToast("会议室已锁定，您将无法参加会议");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 1006:
+                            showToast("流媒体服务器异常");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2014:
+                            showToast("请稍后再次尝试");
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 1007:
+                            showToast("当前网络不稳定");
+                            break;
+                        case 2000:
+                            showToast("账号在其他地点登录，请重新登录");
+                            openAcitivty(LoginActivity.class);
+                            MeetingWebViewActivity.this.finish();
+                            break;
+                        case 2004:
+                            isMeeting = true;
+                            break;
+
+
                     }
 
                 } catch (JSONException e) {
@@ -162,12 +218,15 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        Log.d("KeyEvent", "KeyUp has been triggered on the view" + keyCode);
         // If back key
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Log.d("KeyEvent", "KeyUp has been triggered on the view KEYCODE_BACK" + keyCode);
-            tutorialView.loadUrl("javascript:cordova.fireDocumentEvent('backbutton');");
-            return true;
+            if (isMeeting) {
+                Log.d("KeyEvent", "KeyUp has been triggered on the view KEYCODE_BACK" + keyCode);
+                tutorialView.loadUrl("javascript:cordova.fireDocumentEvent('backbutton');");
+                return true;
+            } else {
+                this.finish();
+            }
         }
         // Legacy
         else if (keyCode == KeyEvent.KEYCODE_MENU) {
@@ -180,6 +239,16 @@ public class MeetingWebViewActivity extends BaseActivity implements CordovaInter
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        }
+        cordovaWebView.handleDestroy();
     }
 
     @Override

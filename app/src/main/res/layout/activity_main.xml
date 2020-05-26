@@ -8,8 +8,6 @@
     android:background="@color/color_gray"
     tools:context=".activity.main.MainActivity">
 
-    <include layout="@layout/include_toolbar_layout_text" />
-
     <com.lrs.lrsmeeting.view.NoScrollViewPager
         android:id="@+id/main_viewPager"
         android:layout_width="match_parent"

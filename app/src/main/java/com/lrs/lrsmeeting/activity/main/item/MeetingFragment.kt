@@ -2,6 +2,7 @@ package com.lrs.lrsmeeting.activity.main.item
 
 import android.annotation.SuppressLint
 import android.app.Person
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +20,9 @@ import com.lrs.lrsmeeting.R
 import com.lrs.lrsmeeting.activity.login.LoginActivity
 import com.lrs.lrsmeeting.activity.main.MainActivity
 import com.lrs.lrsmeeting.activity.main.adapter.MeetingAdapter
+import com.lrs.lrsmeeting.activity.meeting.CodeOpenActivity
 import com.lrs.lrsmeeting.activity.meeting.CreateMeetingActivity
+import com.lrs.lrsmeeting.base.BaseActivity
 import com.lrs.lrsmeeting.base.LazyLoadingFragment
 import com.lrs.lrsmeeting.bean.MeetingBase
 import com.lrs.lrsmeeting.url.Config
@@ -52,6 +55,9 @@ class MeetingFragment : LazyLoadingFragment() {
     private lateinit var adapter: MeetingAdapter;
     private var userId: String? = "";
 
+    private var pageNum = 0;
+    private var pageSize = 10;
+
     companion object {
         private lateinit var fragment: MeetingFragment;
         fun newInstance(): MeetingFragment? {
@@ -70,65 +76,46 @@ class MeetingFragment : LazyLoadingFragment() {
 
     @SuppressLint("WrongConstant")
     override fun onVisibleToUser() {
-        (activity as MainActivity).setTitle(false, "会议", getString(R.string.icontianjia)) {
-            val arr = arrayOf("发起会议", "预约会议");
+//         setTitle(false, "会议", getString(R.string.icontianjia)) {
+//            val arr = arrayOf("发起会议", "预约会议");
+//            val mMenuPopup = XUISimplePopup<XUISimplePopup<*>>(context, arr)
+//                .create(OnPopupItemClickListener { _, item, position ->
+//                    if (position == 1) {
+//                        (activity as MainActivity).openAcitivty(CreateMeetingActivity().javaClass);
+//                    }
+//                })
+//            mMenuPopup.showDown(it)
+//        };
+        setTitle(false, "会议", getString(R.string.icontianjia)) {
+            val arr = arrayOf("邀请码");
             val mMenuPopup = XUISimplePopup<XUISimplePopup<*>>(context, arr)
                 .create(OnPopupItemClickListener { _, item, position ->
-                    if (position == 1) {
-                        (activity as MainActivity).openAcitivty(CreateMeetingActivity().javaClass);
+                    if (position == 0) {
+                        (activity as MainActivity).openAcitivty(CodeOpenActivity().javaClass);
                     }
                 })
             mMenuPopup.showDown(it)
         };
     }
 
+
     private fun getData() {
-        llStateful.showLoading();
-
-
-//        var sql = "select * from Meeting where launUserId = '$userId' order by meetingSate"
-//        var bmo = BmobQuery<Meeting>();
-//        bmo.doSQLQuery(sql, object : SQLQueryListener<Meeting>() {
-//            override fun done(t: BmobQueryResult<Meeting>?, e: BmobException?) {
-//                if (e != null) {
-//                    showToast("查询失败");
-//                    llStateful.showError {
-//                        getData();
-//                    }
-//                } else {
-//                    if (t != null && t.results.size > 0) {
-//                        t.results.forEach {
-//                            adapter.addData(it);
-//                        }
-//                        llStateful.showContent()
-//                    } else {
-//                        llStateful.showEmpty();
-//                    }
-//                }
-//                refreshLayout.finishRefresh();
-//            }
-//
-//        })
-
+        if (pageNum == 0) {
+            llStateful.showLoading();
+        }
 
         var mp = hashMapOf<String, String>();
         var json = JSONObject();
-//        json.put("userId", SharedPreferencesHelper.getPrefString("userId", null));
-//        json.put("orgId", SharedPreferencesHelper.getPrefString("orgId", null));
-//        json.put("method", "getRooms");
-//        json.put("SID",SharedPreferencesHelper.getPrefString("SID", null));
-//        json.put("module", "room");
-//            SimpleDateFormat("yyyyMMddHHmmss").format(Date(System.currentTimeMillis()))
         var c: Calendar = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.DAY_OF_MONTH, -30);
         val tDa: String = SimpleDateFormat("yyyyMMddHHmmss").format(c.time);
-        c.add(Calendar.DAY_OF_MONTH, 3);
+        c.add(Calendar.DAY_OF_MONTH, 30);
         val tmo: String = SimpleDateFormat("yyyyMMddHHmmss").format(c.time);
         json.put("startTime", tDa);
         json.put("endTime", tmo);
-        json.put("pageNo", 0);
-        json.put("pageSize", 6);
-        json.put("method", "list");
+        json.put("pageNo", pageNum);
+        json.put("pageSize", pageSize);
+        json.put("method", "listByMonth");
         json.put("SID", SharedPreferencesHelper.getPrefString("SID", null));
 
         mp["params"] = json.toString();
@@ -150,46 +137,84 @@ class MeetingFragment : LazyLoadingFragment() {
             override fun onResponse(response: MeetingBase?) {
                 if (response?.result == 0) {
                     if (response?.meetings == null) {
-                        openActivity(LoginActivity::class.java);
-                        activity?.finish();
+                        if (pageNum == 0) {
+                            llStateful.showEmpty("最近30天暂无会议");
+                        }
+                        showToast("没有更多数据");
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.setEnableLoadMore(false);
                         return;
                     }
+
+                    refreshLayout.setEnableLoadMore(true);
                     if (response?.meetings.size > 0) {
                         response.meetings.forEach {
                             adapter.addData(it);
                         }
                         llStateful.showContent()
                     } else {
-                        llStateful.showEmpty();
+                        llStateful.showEmpty("最近30天暂无会议");
                     }
                 } else {
-                    llStateful.showEmpty();
+                    llStateful.showEmpty("最近30天暂无会议");
                 }
                 refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
             }
         });
-//        var mp1 = hashMapOf<String, String>();
-//        var json1 = JSONObject();
-//        json1.put("userId", 2);
-//        json1.put("orgId", 2);
-//        json1.put("method", "getRooms");
-//        json1.put("SID", SharedPreferencesHelper.getPrefString("SID", null));
-//
-//
-//        mp["params"] = json1.toString();
-//        HyrcHttpUtil.httpPost(
-//            "https://demo.527meeting.com/app/room",
-//            mp1,
-//            object : CallBackUtil.CallBackString() {
-//                override fun onFailure(call: Call?, e: java.lang.Exception?) {
-//                    Log.e("","");
-//                }
-//
-//                override fun onResponse(response: String?) {
-//                    Log.e("","");
-//                }
-//
-//            })
+    }
+
+    private fun autoLogin() {
+        var userPhone = SharedPreferencesHelper.getPrefString("userPhone", "");
+        var passWord = SharedPreferencesHelper.getPrefString("userMd5PWd", "");
+        var mapPm = hashMapOf<String, String>();
+        var jData = JSONObject();
+        jData.put("name", userPhone);
+        jData.put("password", passWord);
+        jData.put("method", "login");
+        jData.put("SID", "");
+        jData.put("url", "");
+        jData.put("token", "");
+        jData.put("company", "北京宏宇睿晨技术有限公司");
+        jData.put("appkey", "F6JJKH7LKJKJ8JKJH6GTYMBPO9");
+
+        mapPm["params"] = jData.toString();
+        HyrcHttpUtil.httpPost(Config.CURRENCY, mapPm, object : CallBackUtil.CallBackString() {
+            override fun onFailure(call: Call?, e: java.lang.Exception?) {
+            }
+
+            override fun onResponse(response: String?) {
+                var obj = JSONObject(response);
+                if (obj.getInt("result") == 0) {
+                    var userIt = obj.getJSONObject("user");
+                    SharedPreferencesHelper.setPrefString(
+                        "orgId",
+                        (obj.getJSONArray("organisations").get(0) as JSONObject).getInt("id")
+                            .toString()
+                    );
+                    SharedPreferencesHelper.setPrefString(
+                        "userId",
+                        userIt.getInt("id").toString()
+                    );
+                    SharedPreferencesHelper.setPrefString(
+                        "userName",
+                        userIt.getString("name")
+                    );
+                    SharedPreferencesHelper.setPrefString(
+                        "userURL",
+                        userIt.getString("pictureurl")
+                    );
+                    SharedPreferencesHelper.setPrefString(
+                        "SID",
+                        obj.getString("SID")
+                    );
+                    getData();
+                } else {
+                    openActivity(LoginActivity().javaClass)
+                }
+            }
+
+        })
     }
 
     fun <T> fromToJson(json: String?, listType: Type?): T? {
@@ -234,15 +259,19 @@ class MeetingFragment : LazyLoadingFragment() {
                 adapter.data.clear();
                 adapter.clearState();
             }
-            getData();
+            pageNum = 0;
+//            getData();
+            autoLogin();
         }
 
         //加载更多
         refreshLayout.setOnLoadMoreListener {
-            refreshLayout.finishLoadMore();
+            pageNum += 1;
+            getData();
         }
 
-        getData();
+        //自动登录
+        autoLogin();
 
 
     }

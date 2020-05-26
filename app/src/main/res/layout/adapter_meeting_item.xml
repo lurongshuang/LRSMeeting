@@ -64,7 +64,6 @@
                 android:gravity="center_vertical|right"
                 android:lines="2"
                 android:maxLines="2"
-                android:text="3月26日"
                 android:textColor="@color/edu_text_more_color"
                 android:textSize="@dimen/sp_12" />
 

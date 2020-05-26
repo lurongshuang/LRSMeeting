@@ -44,6 +44,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
+        <activity android:name=".activity.setting.SetingActivity"></activity>
+        <activity android:name=".activity.meeting.CodeOpenActivity" />
+        <activity android:name=".activity.about.AboutActivity" />
         <activity android:name=".activity.meeting.MeetingWebViewActivity" />
 
         <uses-library

@@ -7,6 +7,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import butterknife.BindView
+import com.gyf.barlibrary.ImmersionBar
 import com.lrs.hyrc_base.utils.sharedpreferences.SharedPreferencesHelper
 import com.lrs.lrsmeeting.R
 import com.lrs.lrsmeeting.activity.login.LoginActivity
@@ -45,8 +46,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initData() {
-        setTitle(false, "首页");
-        userId = SharedPreferencesHelper.getPrefString( "userId", null);
+        userId = SharedPreferencesHelper.getPrefString("userId", null);
         if (userId == null) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -94,8 +94,17 @@ class MainActivity : BaseActivity() {
         }
         mRadioGroupId.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-                R.id.radio0 -> mainViewPager.setCurrentItem(0, false)
-                R.id.radio1 -> mainViewPager.setCurrentItem(1, false)
+                R.id.radio0 -> {
+                    mainViewPager.setCurrentItem(0, false)
+                    ImmersionBar.with(this).statusBarDarkFont(false)
+                        .statusBarColor(R.color.colorPrimaryDark, 0F).fitsSystemWindows(true).init()
+                }
+                R.id.radio1 -> {
+                    mainViewPager.setCurrentItem(1, false)
+                    ImmersionBar.with(this).statusBarDarkFont(false)
+                        .statusBarColor(R.color.transparent, 0F).fitsSystemWindows(false)
+                        .init()
+                }
             }
         }
     }

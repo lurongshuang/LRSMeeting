@@ -16,6 +16,7 @@ import com.lrs.hyrc_base.utils.httputils.HyrcHttpUtil
 import com.lrs.hyrc_base.utils.sharedpreferences.SharedPreferencesHelper
 import com.lrs.hyrc_base.utils.thread.ThreadUtils
 import com.lrs.lrsmeeting.activity.main.MainActivity
+import com.lrs.lrsmeeting.activity.meeting.CodeOpenActivity
 import com.lrs.lrsmeeting.activity.register.RegisterActivity
 import com.lrs.lrsmeeting.base.BaseActivity
 import com.lrs.lrsmeeting.bean.User
@@ -60,33 +61,6 @@ class LoginModel(content: Activity) : BaseObservable() {
             return;
         }
         (content as BaseActivity).loadBaseDialog?.show();
-//        val bmobQuery = BmobQuery<User>();
-//        val sql =
-//            "select * from User where userPhone = '" + userPhone.get() + "' and passWord = '" + passWord.get() + "'";
-//        bmobQuery.doSQLQuery(sql, object : SQLQueryListener<User>() {
-//            override fun done(t: BmobQueryResult<User>?, e: BmobException?) {
-//                loadBaseDialog.dismiss();
-//                if (t != null && t.results.size > 0) {
-//                    var user: User = t.results[0];
-//                    toastString("登录成功：欢迎您：" + user.userName);
-//                    SharedPreferencesHelper.setPrefString(content, "userId", userPhone.get());
-//                    SharedPreferencesHelper.setPrefString(content, "userName", user.userName);
-//                    SharedPreferencesHelper.setPrefString(content, "userURL", user.userURL);
-//                    val intent = Intent(content, MainActivity().javaClass)
-////                    intent.putExtra(MessageUtil.INTENT_EXTRA_USER_ID, userPhone.get())
-//                    content.startActivity(intent);
-//                    val task: TimerTask = object : TimerTask() {
-//                        override fun run() {
-//                            content.finish();
-//                        }
-//                    }
-//                    val timer = Timer()
-//                    timer.schedule(task, 1 * 1000)
-//                } else {
-//                    toastString("用户名密码错误，请重试");
-//                }
-//            }
-//        });
 
         var mapPm = hashMapOf<String, String>();
         var jData = JSONObject();
@@ -112,14 +86,16 @@ class LoginModel(content: Activity) : BaseObservable() {
                 if (obj.getInt("result") == 0) {
                     var userIt = obj.getJSONObject("user");
                     toastString("登录成功");
-                    SharedPreferencesHelper.setPrefString("userPhone", userPhone.get());
+                    SharedPreferencesHelper.setPrefString("userPhone", userPhone.get().toString());
+                    SharedPreferencesHelper.setPrefString("userMd5PWd", passWord.get().toString());
                     SharedPreferencesHelper.setPrefString(
                         "orgId",
-                        (obj.getJSONArray("organisations").get(0) as JSONObject).getString("id")
+                        (obj.getJSONArray("organisations").get(0) as JSONObject).getInt("id")
+                            .toString()
                     );
                     SharedPreferencesHelper.setPrefString(
                         "userId",
-                        userIt.getString("id")
+                        userIt.getInt("id").toString()
                     );
                     SharedPreferencesHelper.setPrefString(
                         "userName",
@@ -155,6 +131,14 @@ class LoginModel(content: Activity) : BaseObservable() {
      */
     fun onToRegister(v: View) {
         val intent = Intent(content, RegisterActivity().javaClass);
+        content.startActivity(intent)
+    }
+
+    /**
+     * 进入会议
+     */
+    fun onToMeeting(v: View) {
+        val intent = Intent(content, CodeOpenActivity().javaClass);
         content.startActivity(intent)
     }
 

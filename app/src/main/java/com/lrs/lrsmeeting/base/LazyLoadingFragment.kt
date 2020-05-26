@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.lrs.hyrc_base.activity.splash.SplashActivity
+import com.lrs.lrsmeeting.R
+import com.lrs.lrsmeeting.view.FontIconView
 
 /**
  * @description 作用:
@@ -152,4 +155,124 @@ abstract class LazyLoadingFragment : Fragment() {
             Toast.makeText(activity!!.applicationContext, id, Toast.LENGTH_SHORT).show()
         }
     }
+
+    /**
+     * 设置状态栏
+     *
+     * @param isShowLeftRes 是否显示 左侧按钮
+     * @param name          标题
+     */
+    fun setTitle(isShowLeftRes: Boolean, name: String?) {
+        val textView = rootView?.findViewById<TextView>(R.id.tv_title)
+        if (textView != null) {
+            textView.text = name
+        }
+        val fontIconView: FontIconView? = rootView?.findViewById(R.id.iv_leftIcon)
+        if (fontIconView != null) {
+            fontIconView.visibility = if (isShowLeftRes) View.VISIBLE else View.GONE
+            fontIconView.setOnClickListener(View.OnClickListener { activity?.finish() })
+        }
+        val tv_rightText: FontIconView? = rootView?.findViewById(R.id.tv_rightText)
+        if (tv_rightText != null) {
+            tv_rightText.visibility = View.GONE
+        }
+    }
+
+    /**
+     * 设置状态栏
+     *
+     * @param isShowLeftRes 是否显示 左侧按钮
+     * @param name          标题
+     */
+    fun setTitle(
+        isShowLeftRes: Boolean,
+        name: String?,
+        right: String?
+    ) {
+        val textView = rootView?.findViewById<TextView>(R.id.tv_title)
+        if (textView != null) {
+            textView.text = name
+        }
+        val fontIconView: FontIconView? = rootView?.findViewById(R.id.iv_leftIcon)
+        if (fontIconView != null) {
+            fontIconView.setVisibility(if (isShowLeftRes) View.VISIBLE else View.GONE)
+            fontIconView.setOnClickListener(View.OnClickListener { activity?.finish() })
+        }
+        val tv_rightText: FontIconView? = rootView?.findViewById(R.id.tv_rightText)
+        if (tv_rightText != null) {
+            tv_rightText.visibility = View.VISIBLE
+            tv_rightText.text = right
+        }
+    }
+
+    /**
+     * 设置状态栏
+     *
+     * @param isShowLeftRes 是否显示 左侧按钮
+     * @param name          标题
+     */
+    fun setTitle(
+        isShowLeftRes: Boolean,
+        name: String?,
+        right: String?,
+        rightOnclick: View.OnClickListener?
+    ) {
+        val textView = rootView?.findViewById<TextView>(R.id.tv_title)
+        if (textView != null) {
+            textView.text = name
+        }
+        val fontIconView: FontIconView? = rootView?.findViewById(R.id.iv_leftIcon)
+        if (fontIconView != null) {
+            fontIconView.visibility = if (isShowLeftRes) View.VISIBLE else View.GONE
+            fontIconView.setOnClickListener(View.OnClickListener { activity?.finish() })
+        }
+        val tv_rightText: FontIconView? = rootView?.findViewById(R.id.tv_rightText)
+        if (tv_rightText != null) {
+            tv_rightText.visibility = View.VISIBLE
+            tv_rightText.text = right
+            tv_rightText.setOnClickListener(rightOnclick)
+        }
+    }
+
+    /**
+     * 设置状态栏
+     *
+     * @param isShowLeftRes 是否显示 左侧按钮
+     * @param name          标题
+     */
+    fun setTitle(
+        isShowLeftRes: Boolean,
+        name: String?,
+        right: String?,
+        rightOnclick: View.OnClickListener?,
+        rightTitle: String?,
+        rightViewOnclick: View.OnClickListener?
+    ) {
+        val textView = rootView?.findViewById<TextView>(R.id.tv_title)
+        if (textView != null) {
+            textView.text = name
+        }
+        val fontIconView: FontIconView? = rootView?.findViewById(R.id.iv_leftIcon)
+        if (fontIconView != null) {
+            fontIconView.setVisibility(if (isShowLeftRes) View.VISIBLE else View.GONE)
+            fontIconView.setOnClickListener(View.OnClickListener { activity?.finish() })
+        }
+        if (right != null && rightOnclick != null) {
+            val tv_rightText: FontIconView? = rootView?.findViewById(R.id.tv_rightText)
+            if (tv_rightText != null) {
+                tv_rightText.visibility = View.VISIBLE
+                tv_rightText.setText(right)
+                tv_rightText.setOnClickListener(rightOnclick)
+            }
+        }
+        if (rightTitle != null && rightViewOnclick != null) {
+            val tv_rightTitle = rootView?.findViewById<TextView>(R.id.tv_rightTextTitle)
+            if (tv_rightTitle != null) {
+                tv_rightTitle.visibility = View.VISIBLE
+                tv_rightTitle.text = rightTitle
+                tv_rightTitle.setOnClickListener(rightViewOnclick)
+            }
+        }
+    }
+
 }

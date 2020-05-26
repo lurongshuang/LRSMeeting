@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.setting.SetingActivity">
+
+    <include layout="@layout/include_toolbar_layout_text" />
+
+    <com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout
+        android:id="@+id/xuiUnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_1"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:gravity="center_vertical"
+            android:text="注销账户"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_14" />
+
+        <com.lrs.hyrc_base.view.FontIconView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="@string/iconjinru"
+            android:textSize="@dimen/sp_18" />
+    </com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout>
+
+    <com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout
+        android:id="@+id/xuiExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_1"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:gravity="center_vertical"
+            android:text="退出程序"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_14" />
+
+        <com.lrs.hyrc_base.view.FontIconView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="@string/iconjinru"
+            android:textSize="@dimen/sp_18" />
+    </com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout>
+</LinearLayout>

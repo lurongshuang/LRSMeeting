@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import com.google.gson.Gson;
 import com.lrs.hyrc_base.utils.httputils.CallBackUtil;
 import com.lrs.hyrc_base.utils.httputils.HyrcHttpUtil;
 import com.lrs.hyrc_base.utils.sharedpreferences.SharedPreferencesHelper;
+import com.lrs.hyrc_base.utils.thread.ThreadUtils;
 import com.lrs.hyrc_base.utils.time.TimeUtils;
 import com.lrs.lrsmeeting.R;
 import com.lrs.lrsmeeting.activity.meeting.adapter.MeetingPerAdapter;
@@ -22,9 +25,11 @@ import com.lrs.lrsmeeting.base.BaseActivity;
 import com.lrs.lrsmeeting.bean.MeetingBase;
 import com.lrs.lrsmeeting.bean.MeetingDel;
 import com.lrs.lrsmeeting.url.Config;
+import com.lrs.lrsmeeting.utils.text.HtmlTextUtils;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.statelayout.StatefulLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,47 +40,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 import okhttp3.Response;
 import retrofit2.Callback;
 
 public class MeetingDelActivity extends BaseActivity implements View.OnClickListener {
-    @BindView(R.id.tvMeetingName)
-    TextView tvMeetingName;
-
-    @BindView(R.id.llMeetingDate)
-    LinearLayout llMeetingDate;
-
-    @BindView(R.id.tvMeetingLaunUser)
-    TextView tvMeetingLaunUser;
-
-    @BindView(R.id.tvMeetingDate)
-    TextView tvMeetingDate;
-
-    @BindView(R.id.tvMeetingTime)
-    TextView tvMeetingTime;
-
-    @BindView(R.id.tvMeetingNumber)
-    TextView tvMeetingNumber;
-
-    @BindView(R.id.tvMeetingState)
-    TextView tvMeetingState;
-
-    @BindView(R.id.rylist)
-    RecyclerView rylist;
+    @BindView(R.id.ryList)
+    RecyclerView ryList;
 
     @BindView(R.id.btjoinMeeting)
     ButtonView btjoinMeeting;
+
     @BindView(R.id.sfLayout)
     StatefulLayout sfLayout;
 
     String sid;
     Long meetingId;
     MeetingPerAdapter adapter;
+    private int userId;
+    //是否为 支持人
+    private boolean isLaunUser;
 
     @Override
     protected int loadView() {
-        return R.layout.activity_meeting_del2;
+        return R.layout.activity_meeting_del;
     }
 
     private void loadDa() {
@@ -137,42 +126,114 @@ public class MeetingDelActivity extends BaseActivity implements View.OnClickList
     }
 
     private void getData() {
-        btjoinMeeting.setOnClickListener(this);
         loadDa();
     }
 
     @Override
     protected void initData() {
         setTitle(true, "会议详情");
-        GridLayoutManager gm = new GridLayoutManager(this, 4);
-        gm.setOrientation(GridLayoutManager.VERTICAL);
-        rylist.setLayoutManager(gm);
-        adapter = new MeetingPerAdapter(R.layout.include_meeting_per_item, this);
-        rylist.setAdapter(adapter);
         sid = SharedPreferencesHelper.getPrefString("SID", "");
         meetingId = getIntent().getExtras().getLong("meetingId");
+        userId = Integer.parseInt(SharedPreferencesHelper.getPrefString("userId", ""));
+        LinearLayoutManager gm = new LinearLayoutManager(this);
+        gm.setOrientation(GridLayoutManager.VERTICAL);
+        ryList.setLayoutManager(gm);
+        adapter = new MeetingPerAdapter(R.layout.include_meeting_per_item, this);
+        ryList.setAdapter(adapter);
+        btjoinMeeting.setOnClickListener(this);
         getData();
 
     }
 
+    private String[] param = {"会议主题", "主持人", "会议日期", "会议时间", "参会人数", "会议状态"};
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void intiUI(MeetingDel response) {
-        tvMeetingName.setText(response.getMeeting().getName());
-        tvMeetingLaunUser.setText(response.getMeeting().getFrom().getName());
-        tvMeetingDate.setText(TimeUtils.getInstance().utc2Local(response.getMeeting().getStartTime(), "yyyy年MM月dd日"));
-        tvMeetingTime.setText(TimeUtils.getInstance().utc2Local(response.getMeeting().getStartTime(), "HH:mm") + "--" + TimeUtils.getInstance().utc2Local(response.getMeeting().getEndTime(), "HH:mm"));
-        tvMeetingNumber.setText(response.getMembers().size() + "人");
-        tvMeetingState.setText(switchTime(response.getMeeting().getStartTime(), response.getMeeting().getEndTime()));
+        if (userId == response.getMeeting().getFrom().getId()) {
+            isLaunUser = true;
+        }
+        String[] parText = {response.getMeeting().getName(), response.getMeeting().getFrom().getName(),
+                TimeUtils.getInstance().utc2Local(response.getMeeting().getStartTime(), "yyyy年MM月dd日"),
+                TimeUtils.getInstance().utc2Local(response.getMeeting().getStartTime(), "HH:mm") + "--" + TimeUtils.getInstance().utc2Local(response.getMeeting().getEndTime(), "HH:mm"),
+                response.getMembers().size() + "人", switchTime(response.getMeeting().getStartTime(), response.getMeeting().getEndTime()),
+                response.getMeeting().getDescription()};
+
+        for (int i = 0; i < param.length; i++) {
+            View view = View.inflate(this, R.layout.activity_meeting_item, null);
+            TextView tvName = view.findViewById(R.id.tvName);
+            TextView tvText = view.findViewById(R.id.tvText);
+            tvName.setText(param[i]);
+            tvText.setText(parText[i]);
+            adapter.addHeaderView(view);
+            if (i == param.length - 1) {
+                if (satesId == 0) {
+                    tvText.setTextColor(getResources().getColor(R.color.color_green));
+                } else if (satesId == 1) {
+                    tvText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                } else {
+                    tvText.setTextColor(getResources().getColor(R.color.contents_text));
+                }
+            }
+        }
+        //会议议题
+        if (response.getTopics() != null && response.getTopics().trim().length() > 0) {
+            String textYt = "";
+            try {
+                JSONArray jsonArray = new JSONArray(response.getTopics());
+                if (jsonArray != null && jsonArray.length() > 0) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        textYt += jsonArray.getJSONObject(i).getString("title");
+                        if (i != jsonArray.length() - 1) {
+                            textYt += ", ";
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (textYt.trim().length() > 0) {
+                View viewYT = View.inflate(this, R.layout.activity_meeting_item, null);
+                TextView tvName = viewYT.findViewById(R.id.tvName);
+                TextView tvText = viewYT.findViewById(R.id.tvText);
+                tvName.setText("会议议题");
+                tvText.setText(textYt);
+                adapter.addHeaderView(viewYT, 1);
+            }
+        }
+
+        View view1 = View.inflate(this, R.layout.include_metting_text, null);
+        TextView tvStateTitle = view1.findViewById(R.id.tvStateTitle);
+        tvStateTitle.setText("会议简述");
+        adapter.addHeaderView(view1);
+
+        View view1_text = View.inflate(this, R.layout.include_metting_text, null);
+        TextView textView = view1_text.findViewById(R.id.tvStateTitle);
+        textView.setText(HtmlTextUtils.getInstance().htmlDecode(response.getMeeting().getDescription()));
+        textView.setBackgroundColor(getResources().getColor(R.color.white));
+        adapter.addHeaderView(view1_text);
+
+
+        View view2 = View.inflate(this, R.layout.include_metting_text, null);
+        TextView tvStateTitle1 = view2.findViewById(R.id.tvStateTitle);
+        tvStateTitle1.setText("参会人员");
+        adapter.addHeaderView(view2);
+
+
+        View view3 = View.inflate(this, R.layout.include_meeting_list, null);
+        RecyclerView ryPerList = view3.findViewById(R.id.ryPerList);
+        GridLayoutManager gm = new GridLayoutManager(this, 4);
+        gm.setOrientation(GridLayoutManager.VERTICAL);
+        ryPerList.setLayoutManager(gm);
+        MeetingPerAdapter adapterPer = new MeetingPerAdapter(R.layout.include_meeting_per_item, this);
+        ryPerList.setAdapter(adapterPer);
         //参会人员
         if (response.getMembers().size() > 0) {
-            adapter.addData(response.getMembers());
+            adapterPer.addData(response.getMembers());
         }
-//        if (satesId == 0) {
-//            btjoinMeeting.setSolidColor(R.color.colorPrimary);
-//        } else {
-//            btjoinMeeting.setSolidColor(R.color.f959595);
-//        }
+        adapter.addHeaderView(view3);
+
         sfLayout.showContent();
+
     }
 
     @Override
@@ -216,7 +277,9 @@ public class MeetingDelActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.btjoinMeeting:
                 if (satesId == 0) {
-                    openAcitivty(MeetingWebViewActivity.class, getIntent().getExtras());
+                    Bundle bundle = getIntent().getExtras();
+                    bundle.putBoolean("isLaunUser", isLaunUser);
+                    openAcitivty(MeetingWebViewActivity.class, bundle);
                 } else {
                     showToast((satesId == 1 ? "会议未开始" : "会议已结束"));
                 }
