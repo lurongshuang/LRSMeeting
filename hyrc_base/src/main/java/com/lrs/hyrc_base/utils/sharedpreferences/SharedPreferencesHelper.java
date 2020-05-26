@@ -73,12 +73,15 @@ public class SharedPreferencesHelper {
         return PreferenceManager.getDefaultSharedPreferences(BaseApplication.getInstance()).contains(key);
     }
 
-    public static void clearPreference(final SharedPreferences p) {
-        final SharedPreferences.Editor editor = p.edit();
+    public static void clearPreference() {
+        final SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.clear();
         editor.commit();
     }
 
+    public static SharedPreferences getSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(BaseApplication.getInstance());
+    }
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;

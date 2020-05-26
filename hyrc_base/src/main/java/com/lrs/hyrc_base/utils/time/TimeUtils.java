@@ -61,7 +61,7 @@ public class TimeUtils {
      */
     public String Local2UTC() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        sdf.setTimeZone(TimeZone.getTimeZone("gmt"));
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String gmtTime = sdf.format(new Date());
         return gmtTime;
     }
@@ -74,7 +74,7 @@ public class TimeUtils {
     public String Local2UTC(String localTime) {
         //当地时间格式
         SimpleDateFormat localFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        localFormater.setTimeZone(TimeZone.getDefault());
+        localFormater.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         Date gpsLocalDate = null;
         try {
             gpsLocalDate = localFormater.parse(localTime);
@@ -107,7 +107,7 @@ public class TimeUtils {
         }
         //当地时间格式
         SimpleDateFormat localFormater = new SimpleDateFormat(format);
-        localFormater.setTimeZone(TimeZone.getDefault());
+        localFormater.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String localTime = localFormater.format(gpsUTCDate.getTime());
         return localTime;
     }

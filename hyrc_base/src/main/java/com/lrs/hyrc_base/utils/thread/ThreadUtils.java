@@ -44,4 +44,14 @@ public class ThreadUtils {
     public static void timeLapse(int senCond, Consumer onNext) {
         Observable.timer(senCond, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
     }
+
+    /**
+     * 延时执行 任务
+     *
+     * @param MILLISECONDS 毫秒
+     * @param onNext       执行方法
+     */
+    public static void timeLapse(long MILLISECONDS, Consumer onNext) {
+        Observable.timer(MILLISECONDS, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
+    }
 }
